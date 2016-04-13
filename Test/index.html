@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="CSS/global.css">
+		<link rel="stylesheet" href="CSS/layout.css">
+	</head>
+	<body>
+		<div id="Container"></div>
+		<div id="Header"></div>
+		<div id="Menu"></div>
+		<div id="SideBar"> <b> Apps Uploaded </b> </div>
+		<div id="MainBody">
+			<div class="dropzone" id="dropzone"> 
+				<label> Drop files here to upload </label>
+			</div>
+		</div>
+		<div id="Footer"></div>
+		
+
+		<script>
+			(function() {
+				var dropzone = document.getElementById('dropzone');
+				var displayUploads = function(data) {
+					var SideBar = document.getElementById('SideBar'),
+					anchor,
+					list,
+					x;
+
+					for(x=0; x<data.length; x=x+1){
+						list = document.createElement('ul');
+						anchor = document.createElement('li');
+						anchor.innerText = data[x].name;
+
+						list.appendChild(anchor);
+						
+						
+
+					}
+					SideBar.appendChild(list);
+				};
+
+				var upload = function(files) {
+					var formData = new FormData(),
+					xhr = new XMLHttpRequest(),
+					x;
+
+					for(x=0; x<files.length; x=x+1){
+						formData.append('file[]',files[x]);
+					}
+
+					xhr.onload = function() {
+						var data = JSON.parse(this.responseText);
+						displayUploads(data);
+					}
+
+					xhr.open('post','http://localhost/Test/upload.php');
+					xhr.send(formData);
+				}
+
+				dropzone.ondrop = function(e){
+					e.preventDefault();
+					this.className = 'dropzone';
+					upload(e.dataTransfer.files);
+
+				};
+
+				dropzone.ondragover = function() { 
+					this.className = 'dropzone dragover';
+					return false;
+				};
+
+				dropzone.ondragleave = function() {
+					this.className = 'dropzone';
+					return false;
+				};
+			
+			}());
+
+
+		</script>
+
+	</body>
+</html>
+

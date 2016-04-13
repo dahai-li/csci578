@@ -1,0 +1,30 @@
+#Container {
+	width: 1500px;
+	height: auto;
+}
+#Header {
+	height:150px;
+	background-color: 	rgb(100,149,237);
+}
+#Menu {
+	height:50px;
+	background-color: 	rgb(192,192,192);
+}
+#SideBar {
+	width:15%;
+	height:800px;
+	float: left;
+	text-align: left;
+	background-color: rgb(64,224,208);
+}
+#MainBody {
+	width:85%;
+	height:800px;
+	float:right;
+	background-color: 	rgb(224,255,255);
+}
+#Footer {
+	height:100px;
+	clear: both;
+	background-color: 	rgb(192,192,192);
+}
