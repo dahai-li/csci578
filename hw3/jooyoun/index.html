@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Homework3 Visualization</title>
+    <link rel="stylesheet" href="homework3.css"/>
+    <script>
+      var ie = ( function() {
+        var undef,
+        v = 3,
+        div = document.createElement('div'),
+        all = div.getElementsByTagName('i');
+        while (
+         div.innerHTML='<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',all[0]
+        );
+        return v > 4 ? v : undef;
+      }() );
+
+      function takeAction() {
+        if( ie && ie < 9 ) {
+	  D3notok();
+        } else {
+          var head = document.getElementsByTagName('head')[0];
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+	        script.src = "d3.min.js";
+          script.addEventListener('load', D3ok, false);
+          script.onload = "D3ok();";
+	  head.appendChild(script);
+       }
+     }
+    </script>
+</head>
+<body onload="takeAction();">
+
+  <div id="componentNetwork"></div>
+
+  <div id="sidepanel">
+    <div id="title">
+      Homework3 Visualization<br/>
+    </div>    
+    <div id="componentInfo" class="panel_off"></div>
+  </div>
+
+  <script src="homework3.js"></script>
+</body>
+</html>
