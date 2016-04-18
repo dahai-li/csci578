@@ -1,0 +1,288 @@
+<meta charset="utf-8">
+    <head>
+        <meta charset="utf-8">
+        <title>Dahai Li CSCI578 - Assn3</title>
+        <script type="text/javascript" src="d3/d3.v3.js"></script>
+    </head>
+<style>
+
+.link {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.5px;
+}	
+
+.node circle {
+  fill: steelblue;
+  stroke: #333;
+  stroke-width: 2;
+}
+
+
+.node rect {
+  stroke: #333;
+  stroke-width: 2;
+  opacity: .5;
+}
+
+.node text {
+  font-size: 11px;
+}
+
+.node:hover text {
+  opacity: 1;
+}
+
+.hidden:hover text {
+	opacity: 1;
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+d3.json("Applications.json", function(root) {
+
+var w = 10000,
+    h = 10000;
+
+var componentHeight = 40;
+var componentWidth = 5;
+
+var svg = d3.select('body').append('svg')
+  .attr('width', w)
+  .attr('height', h);
+  
+  
+var dev = svg.append("defs")
+.append("marker")
+.attr("refy", "3")
+.attr("id", "arrow")
+.attr("markerWidth", "10")
+.attr("markerHeight", "10")
+.attr("refx", "0")
+.attr("orient", "auto")
+.attr("markerUnits", "strokeWidth")
+.append("path")
+.attr("d", "M0,0 L0,6 L10,3 z");
+//.attr("fill", "black");
+
+var data = root.children;
+var links = root.interCompLinks;
+
+//var force = d3.layout.force()
+// .nodes(data)
+//  .links(links)
+//  .linkDistance(1000)
+ // .charge(-1000)
+//  .size([w,h])
+//  .on('tick', tick)
+//  .start();
+ 
+var force = d3.layout.force()
+  .nodes(data)
+  .charge(-90000)
+  .size([w,h])
+  .on('tick', tick)
+  .on("end", end)
+  .start();
+  
+  
+  
+var myLineG = svg
+.selectAll("line")
+.data(links)
+.enter().append("g")
+.on('click', onPathMouseOver, this);
+//.on("submit", onPathClick, this);
+
+var paths = myLineG
+.append("line")
+.attr("stroke", function(d) { return d.isExplicit ? "green" : "#FF3399";})
+.attr("stroke-width", "2")
+.attr("opacity", ".3")
+.attr("marker-end", "url(#arrow)");
+
+var nodes = svg.selectAll('.node')
+  .data(data);
+
+var nodeEnter = nodes.enter().append('g')
+  .attr('class', 'node');
+
+nodeEnter.append('rect')
+	.attr('fill', 'yellow');
+ // .attr('x', 0)
+  //.attr('y', 0)
+  //.attr('height', function(d) {return d.children.length * componentHeight; })
+ // .attr('width', function(d){ return d.width * componentWidth;});
+
+var nodeEnterSub = nodeEnter.append('g');
+
+var selectAllRect = nodeEnterSub.selectAll('g');
+
+var myComponentEnter = nodeEnterSub.selectAll('rect')
+	.data(function(d) { return d.children;})
+	.enter()
+	.append('rect')
+	.attr('fill', function(d) {
+		if (d.componentType === "SERVICE") { return "#CC00FF";} // purplue
+		else if (d.componentType === "ACTIVITY") { return "#CC9966 ";} // orange
+		else if (d.componentType === "RECEIVER") {return "#00CCFF"; } // blue
+		else if (d.componentType === "PROVIDER") {return "#00FFCC"; } // green
+		else return "white"; })
+  .attr('width', function(d) { return d.width * componentWidth;})
+	.attr('y', function(d, i) { return i * componentHeight; })
+	.attr('height', componentHeight);
+
+	
+//nodeEnter.append('text')
+//  .attr('dy', function(d) {return (d.children.length * componentHeight) + 20})
+//  .attr("opacity", "0")
+//  .attr("fill", "red")
+//  .text(function(d) {return "Permission: " + d.permissions;});
+
+nodeEnter.append(function(d) { return createSVGtext(d.permissions, 0, (d.children.length * componentHeight) + 10); })
+.attr("opacity", "1")
+.attr("text-anchor", "bottom")
+.attr("fill", "#996600");
+
+
+var myComponentTexts = selectAllRect
+  .data(function(d) {return d.children;})
+  .enter()
+  .append('text')
+  .attr('dy', function(d, i) {return (i * componentHeight) + (componentHeight/2)})
+  .text(function(d) {return d.name;});
+  
+
+nodeEnter.append("text")
+.style('font-size', "15px")
+.style("fill", "black")
+.style("opacity","1")
+.attr('dy', "-5")
+.text(function(d) {return d.name});
+
+
+
+var myIntentText = svg.append("text")
+.attr("fill", "blue")
+.attr("opacity", "0");
+
+function tick() {
+  nodes.attr('transform', function(d) {
+    return 'translate(' + d.x + ',' + d.y + ')';
+  });
+}
+
+function end() {
+  paths.attr("x1", function(d) {
+	var mySourceOffset = getTransformOffset(d.sourceApplicationIndex),
+		myTargetOffset = getTransformOffset(d.targetApplicationIndex),
+		mySourceRect = getComponentRect(d.sourceApplicationIndex, d.sourceComponentIndex),
+		myTargetRect = getComponentRect(d.targetApplicationIndex, d.targetComponentIndex);
+
+		return (mySourceOffset[0] < myTargetOffset[0]) ? mySourceRect.width + mySourceOffset[0] : mySourceOffset[0];
+  })
+  .attr("y1", function(d) {
+	var mySourceOffset = getTransformOffset(d.sourceApplicationIndex),
+		myTargetOffset = getTransformOffset(d.targetApplicationIndex),
+		mySourceRect = getComponentRect(d.sourceApplicationIndex, d.sourceComponentIndex),
+		myTargetRect = getComponentRect(d.targetApplicationIndex, d.targetComponentIndex);
+		
+		return mySourceOffset[1] + mySourceRect.x;
+  })
+  .attr("x2", function(d) {
+	var mySourceOffset = getTransformOffset(d.sourceApplicationIndex),
+		myTargetOffset = getTransformOffset(d.targetApplicationIndex),
+		mySourceRect = getComponentRect(d.sourceApplicationIndex, d.sourceComponentIndex),
+		myTargetRect = getComponentRect(d.targetApplicationIndex, d.targetComponentIndex);
+
+	return (myTargetOffset[0] < mySourceOffset[0]) ? myTargetOffset[0] + (myTargetRect.width/2) : myTargetOffset[0] + (myTargetRect.width/2);
+  })
+  .attr("y2", function(d) {
+	var mySourceOffset = getTransformOffset(d.sourceApplicationIndex),
+		myTargetOffset = getTransformOffset(d.targetApplicationIndex),
+		mySourceRect = getComponentRect(d.sourceApplicationIndex, d.sourceComponentIndex),
+		myTargetRect = getComponentRect(d.targetApplicationIndex, d.targetComponentIndex);
+		return  myTargetOffset[1] + myTargetRect.y + (myTargetRect.height /2);
+  });
+}
+
+function getComponentRect(app, comp) {
+	var rect = myComponentEnter[app][comp].getBBox();
+	return rect;
+}
+
+function getTransformOffset(app) {
+	var transformOffset = nodes[0][app].transform.animVal[0].matrix;
+	return [transformOffset.e, transformOffset.f];
+}
+
+function onPathMouseOver(path) {
+	var myPos = d3.mouse(this);
+	myIntentText.attr("x", myPos[0])
+	.attr("y", myPos[1])
+	.attr("opacity", "1")
+	.text(path.name);
+	path
+	.attr("stroke-width", "3")
+	.attr("fill", "red")
+}
+
+
+function createSVGtext(caption, x, y) {
+    //  This function attempts to create a new svg "text" element, chopping 
+    //  it up into "tspan" pieces, if the caption is too long
+    //
+    var svgText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+//    svgText.setAttributeNS(null, 'x', x);
+//    svgText.setAttributeNS(null, 'y', y);
+    svgText.setAttributeNS(null, 'font-size', 12);
+    svgText.setAttributeNS(null, 'fill', '#FFFFFF');         //  White text
+    svgText.setAttributeNS(null, 'text-anchor', 'middle');   //  Center the text
+
+    //  The following two variables should really be passed as parameters
+    var MAXIMUM_CHARS_PER_LINE = 50;
+    var LINE_HEIGHT = 16;
+
+    var words = caption.split(" ");
+    var line = "";
+
+    for (var n = 0; n < words.length; n++) {
+        var testLine = line + words[n] + " ";
+        if (testLine.length > MAXIMUM_CHARS_PER_LINE)
+        {
+            //  Add a new <tspan> element
+            var svgTSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            svgTSpan.setAttributeNS(null, 'x', x);
+            svgTSpan.setAttributeNS(null, 'y', y);
+
+            var tSpanTextNode = document.createTextNode(line);
+            svgTSpan.appendChild(tSpanTextNode);
+            svgText.appendChild(svgTSpan);
+
+            line = words[n] + " ";
+            y += LINE_HEIGHT;
+        }
+        else {
+            line = testLine;
+        }
+    }
+
+    var svgTSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+    svgTSpan.setAttributeNS(null, 'x', x);
+    svgTSpan.setAttributeNS(null, 'y', y);
+
+    var tSpanTextNode = document.createTextNode(line);
+    svgTSpan.appendChild(tSpanTextNode);
+
+    svgText.appendChild(svgTSpan);
+
+    return svgText;
+}
+
+});
+
+
+
+</script>

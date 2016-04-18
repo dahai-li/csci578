@@ -1,0 +1,50 @@
+1) Install Java 7
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java7-installer
+
+2) Install 32-bit libraries (for Android Studio)
+sudo apt-get install lib32z1 lib32ncurses5 lib32bz2-1.0 lib32stdc++6
+
+3) Install Android Studio 
+
+4) Install Android Studio SDK: 19.1.0
+
+5) Edit PATH to point to SDK
+gedit ~/.profile
+# add to the very end
+PATH=$PATH:<path to Android/Sdk/build-tools/19.1.0/>
+
+6) Restart VM
+
+7) Install MySQL server
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install mysql-server
+
+8) Set the 'root' password as 'root'
+
+9) Clone the soot-infoflow-android-iccta project
+git clone https://github.com/lilicoding/soot-infoflow-android-iccta.git
+
+10) go into soot-infoflow-android-iccta/iccProvider/epicc/ and edit runEpicc.sh
+Change the username and password to: root
+
+11) go into soot-infoflow-android-iccta/release and edit jdbc.xml
+Change the username and password to: root
+
+12) go into soot-infoflow-android-iccta/release/res and edit jdbc.xml
+Change the username and password to: root
+
+13) go into soot-infoflow-android-iccta/release/res and edit iccta.properties
+Change android_jars to point to the soot-infoflow-android-iccta/android-platforms folder:
+Example: android_jars=/home/dahai/soot-infoflow-android-iccta/android-platforms
+
+14) copy our team's runIccta.sh script to the same directly as soot-infoflow-android-iccta
+
+15) sudo chmod 777 -R soot-infoflow-android-iccta
+
+16) Run the runIccta.sh script with the apk's as parameters
+ ./runIccta.sh <apk1> <apk2> <apk3> ... <apkn>
+
+17) IccTA results are written to the MySQL database: cc
