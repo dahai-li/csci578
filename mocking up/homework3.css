@@ -1,0 +1,184 @@
+body {
+    background-color: #f6f6f6;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: blue;
+}
+
+div#sidepanel {
+    position: absolute;
+    pointer-events: none;
+    top: 0px;
+    right: 0px;
+}
+
+div#title {
+    margin: 4px 2px 6px 0px;
+    border-width: 0px;
+    padding: 0px;
+    text-align: right;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 18px;    
+    line-height: 18px;
+    color: #5D1D4D;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+div#title img {
+    border-width: 0px;
+    margin: 0px;
+}
+
+div.panel_off {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+div.panel_on {
+    visibility: visible;
+    pointer-events: all;
+}
+
+div#componentInfo {
+    position: relative;
+    right: 4px;
+    cursor: text;
+    width: 300px;
+    z-index: 1000;
+    background: #E5E4D6;
+    border: solid 1px #aaa;
+    border-radius: 8px;    
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;    
+    padding: 4px;
+    text-align: right;
+}
+
+div#componentInfo div#cover {
+    text-align: left; 
+    height: 300px;
+}
+
+div#componentInfo div.t {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+div#componentInfo img.cover {
+    margin-bottom: 6px;
+    position: absolute;
+    right: 3px;
+}
+
+div#componentInfo img.action {
+    cursor: pointer;
+    position: absolute;
+}
+
+div#componentInfo div.f {
+    border-top: 1px dotted #8E5981;
+    margin-bottom: 3px;
+    margin-top: 3px;
+}
+
+div#componentInfo span.d {
+    font-weight: bold;
+}
+
+div#componentInfo span.c {
+    font-style: italic;
+}
+
+div#componentInfo span.l {
+    font-size: 11px;
+    color: #24553E;
+    font-variant: small-caps;
+}
+
+div#componentNetwork svg {
+    background-color: white;
+    cursor: move;
+}
+
+line.link {
+    stroke: #B2D9D8;
+}
+
+circle {
+    cursor: crosshair;
+    fill: #EBC763;
+}
+
+circle.level1 {
+    stroke: #f00;
+}
+
+circle.level2 {
+    fill-opacity: 0.8;
+    stroke-opacity: 0.8;
+    stroke: #777;
+}
+
+circle.level3 {
+    fill-opacity: 0.5;
+    stroke-opacity: 0.5;
+}
+
+circle.sibling {
+    fill: #455EE8;
+}
+
+circle.main {
+    fill: #732A9A;
+    fill-opacity: 1.0;
+}
+
+g.gLabel {
+    font: 10px sans-serif;
+    font-weight: normal;
+    visibility: hidden;
+}
+
+g.on {
+    visibility: visible;    
+}
+
+g.zoomed {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: normal;
+    text-align: center;
+    color: #000;
+    border: none;
+    z-index: 0;
+}
+
+text {
+    font: 10px sans-serif;
+    font-weight: normal;
+    stroke-opacity: 1.0;
+}
+
+text.nlabel {
+}
+
+text.nshadow {
+    stroke: #fff;
+    stroke-width: 3px;
+}
+
+text.main {
+    font: 12px sans-serif;
+    font-weight: bold;
+}

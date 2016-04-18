@@ -1,0 +1,7 @@
+Assumption
+
+sudo chmod 777 -R COVERT
+sudo chmod 777 -R Project
+
+Put Facebook.apk in COVERT/covert_dist/app_repo/bundle
+Put All files in Project
