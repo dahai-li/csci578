@@ -1,0 +1,27 @@
+package edu.usc.rest;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+public final class ToolSettings {
+
+	private static final String PROPERTIES_PATH = "/edu/usc/rest/settings.properties";
+
+	public static final Properties getToolSettings() {
+		InputStream myIs = ToolSettings.class.getClassLoader().getResourceAsStream(PROPERTIES_PATH);
+		if (myIs == null) {
+			throw new IllegalStateException("Properties file is not at: " + PROPERTIES_PATH);
+		}
+		Properties myProperties = new Properties();
+		try {
+			myProperties.load(myIs);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not load properties file at: " + PROPERTIES_PATH, e);
+		}
+		return myProperties;
+	}
+
+	private ToolSettings() {
+	}
+}

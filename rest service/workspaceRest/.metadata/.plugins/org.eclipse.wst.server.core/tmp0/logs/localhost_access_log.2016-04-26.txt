@@ -1,0 +1,4 @@
+127.0.0.1 - - [26/Apr/2016:00:00:03 -0700] "GET / HTTP/1.1" 404 951
+0:0:0:0:0:0:0:1 - - [26/Apr/2016:00:00:04 -0700] "GET /ToolRest/WEB-INF/classes/edu/usc/rest/ToolService.java HTTP/1.1" 404 949
+127.0.0.1 - - [26/Apr/2016:00:01:29 -0700] "GET / HTTP/1.1" 404 951
+127.0.0.1 - - [26/Apr/2016:00:01:45 -0700] "POST /ToolRest/api/runTool HTTP/1.1" 200 88
