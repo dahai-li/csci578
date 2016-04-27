@@ -1,26 +1,26 @@
 var ie = ( function() {
 	var undef,
-        v = 3,
-        div = document.createElement('div'),
-        all = div.getElementsByTagName('i');
-        while (
-        	div.innerHTML='<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',all[0]
-        );
-        return v > 4 ? v : undef;
+  v = 3,
+  div = document.createElement('div'),
+  all = div.getElementsByTagName('i');
+  while (
+    div.innerHTML='<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',all[0]
+  );
+  return v > 4 ? v : undef;
 }() );
 
 function takeAction() {
 	if( ie && ie < 9 ) {
-		D3notok();
-       	} else {
-        	var head = document.getElementsByTagName('head')[0];
-          	var script = document.createElement('script');
-          	script.type = 'text/javascript';
-	        script.src = "d3.min.js";
-          	script.addEventListener('load', D3ok, false);
-          	script.onload = "D3ok();";
-	  	head.appendChild(script);
-       	}
+	 D3notok();
+  } else {
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = "d3.min.js";
+    script.addEventListener('load', D3ok, false);
+    script.onload = "D3ok();";
+    head.appendChild(script);
+  }
 }
 
 function D3notok() {

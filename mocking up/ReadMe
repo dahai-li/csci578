@@ -1,7 +1,12 @@
 Assumption
 
-sudo chmod 777 -R COVERT
-sudo chmod 777 -R Project
+Put Facebook.apk in /home/ubuntu/COVERT/covert_dist/app_repo/bundle
+Put All files in /var/www/html
 
-Put Facebook.apk in COVERT/covert_dist/app_repo/bundle
-Put All files in Project
+Python setting
+apt-get install python-simplejson
+apt-get install python-lxml
+apt-get install python-bs4
+
+sudo chmod 777 -R /home/ubuntu/COVERT/
+sudo chmod 777 -R /var/www/html

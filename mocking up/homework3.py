@@ -1,7 +1,7 @@
 import simplejson
 from bs4 import BeautifulSoup
 
-files = ["/home/jjooyoun/COVERT/covert_dist/app_repo/bundle/analysis/merged/Facebook.xml"]
+files = ["/home/ubuntu/COVERT/covert_dist/app_repo/bundle/analysis/merged/Facebook.xml"]
 
 data = {}
 nodes = []
