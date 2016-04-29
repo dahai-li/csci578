@@ -1,0 +1,18 @@
+package edu.usc.rest;
+
+public final class ToolSettings {
+	
+	private static final String PROPERTIES_PATH = "/edu/usc/rest/settings.properties";
+	public static final Properties getToolSettings() {
+		InputStream myIs = ToolSettings.class.getClassLoader().getResourceAsStream(PROPERTIES_PATH);
+		if (myIs == null) {
+			throw new IllegalStateException("Properties file is not at: " + PROPERTIES_PATH);
+		}
+		Properties myProperties 
+	}
+
+	private final String mPropertiesFile;
+	private ToolSettings(final String pPropertiesFile) {
+		mPropertiesFile = pPropertiesFile;
+	}
+}

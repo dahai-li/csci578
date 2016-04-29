@@ -1,0 +1,68 @@
+package edu.usc.rest;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Properties;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import com.google.gson.Gson;
+
+import edu.usc.tool.ApkWriter;
+
+@Path("/")
+public class ToolService {
+
+	@POST
+	@Path("/runTool")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response runTool(final InputStream pInData) {
+		StringBuilder mySb = new StringBuilder();
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(pInData));
+			String line = null;
+			while ((line = in.readLine()) != null) {
+				mySb.append(line);
+			}
+		} catch (Exception e) {
+			System.out.println("Error Parsing: - ");
+		}
+
+		String myReceivedData = mySb.toString();
+		System.out.println("Data Received: " + mySb.toString());
+
+		Gson myGson = new Gson();
+		ApkObjectList myApkObjectList = myGson.fromJson(myReceivedData, ApkObjectList.class);
+
+		// write APK file
+		List<ApkObject> myApkObjects = myApkObjectList.apks;
+		for (ApkObject myApkObject : myApkObjects) {
+			ApkWriter.writeApkObjectToFile(myApkObject);
+		}
+
+		// run the script tool
+
+		// retrieve the file
+
+		// return HTTP response 200 in case of success
+		return Response.status(200).entity(mySb.toString()).build();
+	}
+
+	@GET
+	@Path("/getProperties")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProperties(final InputStream pInData) {
+		Properties myProperties = ToolSettings.getProperties();
+		Gson myGson = new Gson();
+		String myJson = myGson.toJson(myProperties);
+		return Response.status(200).entity(myJson).build();
+	}
+}

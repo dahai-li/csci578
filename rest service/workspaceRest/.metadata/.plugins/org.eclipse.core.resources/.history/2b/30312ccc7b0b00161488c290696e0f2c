@@ -1,0 +1,10 @@
+package edu.usc.tool;
+
+import edu.usc.rest.ApkObject;
+
+public final class ApkWriter {
+
+	public static void writeApkObjectToFile(final ApkObject pApkObject) {
+
+	}
+}
