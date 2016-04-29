@@ -1,11 +1,17 @@
 import json
 from bs4 import BeautifulSoup
+import os 
+
+files = []
+for i in os.listdir("/var/www/html/xml"):
+	files.append(os.path.join("/var/www/html/xml/", i))
+
+xmlfiles = []
+for i in os.listdir("/var/www/html/json"):
+	xmlfiles.append(os.path.join("/var/www/html/json/", i))
+
 senderreceiver=[]
 per=[]
-
-files = ['Facebook.json']
-
-xmlfiles = ['Facebook.xml']
 
 for f in range(len(files)):
 	#for k in range(f+1,4,1):
@@ -27,9 +33,7 @@ for f in range(len(files)):
 					if(intents[i] == act[j]):
 						flag1=True
 						senderreceiver.append([app1["sender"][i],app2["Components Name"][j]])
-				
 
-	
 for p in range(len(xmlfiles)):
 	soup = BeautifulSoup(open(xmlfiles[p]),"xml")
 	name = soup.application.apkFile.next_sibling.next_sibling.contents[0]
