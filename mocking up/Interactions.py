@@ -3,12 +3,12 @@ from bs4 import BeautifulSoup
 import os 
 
 files = []
-for i in os.listdir("/var/www/html/xml"):
-	files.append(os.path.join("/var/www/html/xml/", i))
+for i in os.listdir("/var/www/html/json"):
+	files.append(os.path.join("/var/www/html/json/", i))
 
 xmlfiles = []
-for i in os.listdir("/var/www/html/json"):
-	xmlfiles.append(os.path.join("/var/www/html/json/", i))
+for i in os.listdir("/var/www/html/xml"):
+	xmlfiles.append(os.path.join("/var/www/html/xml/", i))
 
 senderreceiver=[]
 per=[]
