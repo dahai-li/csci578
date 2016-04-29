@@ -1,8 +1,8 @@
 package edu.usc.rest;
 
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,9 +14,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
 import com.google.gson.Gson;
 
 import edu.usc.tool.ApkWriter;
+import edu.usc.tool.ShellExecutor;
 
 @Path("/")
 public class ToolService {
@@ -25,20 +29,26 @@ public class ToolService {
 	@Path("/runTool")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response runTool(final InputStream pInData) {
-		StringBuilder mySb = new StringBuilder();
+		String myReceivedData;
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(pInData));
-			String line = null;
-			while ((line = in.readLine()) != null) {
-				mySb.append(line);
-			}
-		} catch (Exception e) {
-			System.out.println("Error Parsing: - ");
+			myReceivedData = IOUtils.toString(pInData);
+			System.out.println("Data Received: " + myReceivedData);
+		} catch (IOException e1) {
+			throw new RuntimeException("Could not read input stream", e1);
 		}
 
-		String myReceivedData = mySb.toString();
-		System.out.println("Data Received: " + mySb.toString());
+		Properties myProperties = ToolSettings.getProperties();
 
+		String myCovertHomePath = myProperties.getProperty(ToolSettings.COVERT_HOME);
+		File myCovertHome = new File(myCovertHomePath);
+		if (!myCovertHome.exists()) {
+			throw new IllegalStateException(myCovertHome.getAbsolutePath() + " COVERT home directory does not exist!");
+		}
+
+		// Clean up the COVERT "bundle" directory
+		ShellExecutor.executeDirectory(myCovertHome, "cleanUpCovert.sh");
+
+		// Write the APKs to the "bundle" directory
 		Gson myGson = new Gson();
 		ApkObjectList myApkObjectList = myGson.fromJson(myReceivedData, ApkObjectList.class);
 
@@ -48,12 +58,21 @@ public class ToolService {
 			ApkWriter.writeApkObjectToFile(myApkObject);
 		}
 
-		// run the script tool
+		// run the integration tool script
+		ShellExecutor.executeDirectory(myCovertHome, myProperties.getProperty(ToolSettings.PARSER_PATH));
 
 		// retrieve the file
+		File myFile = new File(myProperties.getProperty(ToolSettings.JSON_OUTPUT_PATH));
 
-		// return HTTP response 200 in case of success
-		return Response.status(200).entity(mySb.toString()).build();
+		// get the
+		String myVisualizerJson;
+		try {
+			myVisualizerJson = FileUtils.readFileToString(myFile);
+			return Response.status(200).entity(myVisualizerJson).build();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	@GET
@@ -65,4 +84,5 @@ public class ToolService {
 		String myJson = myGson.toJson(myProperties);
 		return Response.status(200).entity(myJson).build();
 	}
+
 }
