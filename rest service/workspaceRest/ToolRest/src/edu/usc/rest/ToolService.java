@@ -26,6 +26,14 @@ import edu.usc.tool.ShellExecutor;
 public class ToolService {
 
 	@POST
+	@Path("/runToolMock")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response runToolMock(final InputStream pInData) {
+		String myMockJson = "{\"interacting Components\": [[\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"], [\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"], [\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"], [\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"]], \"Permissions\": [[\"SendSMS\", \"READ_PHONE_STATE\"], [\"SendSMS\", \"SEND_SMS\"]]}";
+		return Response.status(200).entity(myMockJson).build();
+	}
+
+	@POST
 	@Path("/runTool")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response runTool(final InputStream pInData) {
@@ -84,5 +92,7 @@ public class ToolService {
 		String myJson = myGson.toJson(myProperties);
 		return Response.status(200).entity(myJson).build();
 	}
+	
+	
 
 }
