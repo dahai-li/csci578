@@ -46,7 +46,7 @@ public class ToolService {
 		}
 
 		// Clean up the COVERT "bundle" directory
-		ShellExecutor.executeDirectory(myCovertHome, "cleanUpCovert.sh");
+		ShellExecutor.executeDirectory(myCovertHome, "/bin/bash", "cleanUpCovert.sh");
 
 		// Write the APKs to the "bundle" directory
 		Gson myGson = new Gson();
@@ -59,7 +59,7 @@ public class ToolService {
 		}
 
 		// run the integration tool script
-		ShellExecutor.executeDirectory(myCovertHome, myProperties.getProperty(ToolSettings.PARSER_PATH));
+		ShellExecutor.executeDirectory(myCovertHome, "/bin/bash", myProperties.getProperty(ToolSettings.PARSER_PATH));
 
 		// retrieve the file
 		File myFile = new File(myProperties.getProperty(ToolSettings.JSON_OUTPUT_PATH));

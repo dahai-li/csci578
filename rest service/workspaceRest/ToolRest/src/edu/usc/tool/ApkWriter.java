@@ -2,6 +2,7 @@ package edu.usc.tool;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,19 +36,22 @@ public final class ApkWriter {
 			myConnection = myDataSource.getConnection();
 			Statement myStatement = myConnection.createStatement();
 
-			String myQuery = "SELECT name,data from apks where id = " + pId;
+			String myQuery = "select name,data from apks where id = " + pId;
 			System.out.println("QUERY: " + myQuery);
 
 			ResultSet myResultSet = myStatement.executeQuery(myQuery);
+			while (myResultSet.next()) {
+				String myApkName = myResultSet.getString(1);
+				File myOutputFile = new File(myDirectory, myApkName);
 
-			File myOutputFile = new File(myDirectory, myResultSet.getString("name"));
+				System.out.println("writing APK file: " + myOutputFile.getAbsolutePath());
 
-			System.out.println("writing APK file: " + myOutputFile.getAbsolutePath());
+				FileOutputStream myFileOutputStream = new FileOutputStream(myOutputFile);
+				InputStream myData = myResultSet.getBinaryStream(2);
+				IOUtils.copy(myData, myFileOutputStream);
 
-			FileOutputStream myFileOutputStream = new FileOutputStream(myOutputFile);
-			IOUtils.copy(myResultSet.getBinaryStream("data"), myFileOutputStream);
-
-			myFileOutputStream.close();
+				myFileOutputStream.close();
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
