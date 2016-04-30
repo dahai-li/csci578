@@ -7,7 +7,8 @@ public final class ShellExecutor {
 
 	public static void execute(String... pCommands) {
 		try {
-			ProcessBuilder myPb = new ProcessBuilder(pCommands);
+			System.out.println("Executing command: " + Arrays.toString(pCommands));
+			ProcessBuilder myPb = new ProcessBuilder().inheritIO().command(pCommands);
 			Process myProcess = myPb.start();
 			myProcess.waitFor();
 		} catch (Exception e) {
@@ -17,7 +18,8 @@ public final class ShellExecutor {
 
 	public static void executeDirectory(File pDirectory, String... pCommands) {
 		try {
-			ProcessBuilder myPb = new ProcessBuilder(pCommands);
+			System.out.println("Executing command: " + Arrays.toString(pCommands));
+			ProcessBuilder myPb = new ProcessBuilder().inheritIO().command(pCommands);
 			myPb.directory(pDirectory);
 			Process myProcess = myPb.start();
 			myProcess.waitFor();
