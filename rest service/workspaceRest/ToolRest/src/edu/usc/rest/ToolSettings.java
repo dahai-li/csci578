@@ -15,6 +15,8 @@ public final class ToolSettings {
 	public static final String MYSQL_DATABASE = "mysql_database";
 	public static final String PARSER_PATH = "parser_path";
 	public static final String JSON_OUTPUT_PATH = "json_output_path";
+	public static final String MYSQL_SERVER = "mysql_server";
+	public static final String MYSQL_PORT = "mysql_port";
 
 	private static Properties sProperties = null;
 

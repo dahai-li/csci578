@@ -28,6 +28,8 @@ public final class ApkWriter {
 		myDataSource.setUser(myProperties.getProperty(ToolSettings.MYSQL_USER));
 		myDataSource.setPassword(myProperties.getProperty(ToolSettings.MYSQL_PASSWORD));
 		myDataSource.setDatabaseName(myProperties.getProperty(ToolSettings.MYSQL_DATABASE));
+		myDataSource.setServerName(myProperties.getProperty(ToolSettings.MYSQL_SERVER));
+		myDataSource.setPort(Integer.valueOf(myProperties.getProperty(ToolSettings.MYSQL_PORT)));
 
 		File myDirectory = new File(myProperties.getProperty(ToolSettings.APK_UPLOAD));
 
