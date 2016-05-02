@@ -53,7 +53,7 @@ public final class StaticAnalysisService {
 		try {
 			myConnection = MySqlConnectionFactory.createConnection();
 			ResultSet myResultSet = myConnection.createStatement()
-					.executeQuery("SELECT xml from covert where key = " + pKey);
+					.executeQuery("SELECT xml from xmls where xml_key = '" + pKey + "'");
 			if (myResultSet.next()) {
 				String myXmlString = myResultSet.getString(1);
 				return myXmlString;
@@ -114,11 +114,11 @@ public final class StaticAnalysisService {
 		Connection myConnection = null;
 		try {
 			myConnection = MySqlConnectionFactory.createConnection();
-			String myQuery = "INSERT INTO covert (key, xml) values (?,?)";
+			String myQuery = "INSERT INTO xmls (xml_key, xml) values (?,?)";
 			PreparedStatement myStatement = myConnection.prepareStatement(myQuery);
 			myStatement.setString(1, pKey);
 			myStatement.setString(2, FileUtils.readFileToString(pXmlFile));
-			myStatement.executeQuery();
+			myStatement.execute();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
