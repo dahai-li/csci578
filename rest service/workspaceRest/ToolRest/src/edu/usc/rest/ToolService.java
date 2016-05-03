@@ -121,6 +121,14 @@ public class ToolService {
 		return Response.status(200).entity(myJson).build();
 	}
 
+	@POST
+	@Path("/runAnalysisMock")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response runAnalysisMock(final InputStream pInData) {
+		String myMockResponse = "{\"vulnerabilities\":[{\"attack_type\":\"Intent Spoofing\",\"component_name_1\":\"org.cert.sendsms.MainActivity\"},{\"attack_type\":\"Intent Spoofing\",\"component_name_1\":\"org.cert.echoer.MainActivity\"}]}";
+		return Response.status(200).entity(myMockResponse).build();
+	}
+
 	@GET
 	@Path("/getProperties")
 	@Produces(MediaType.APPLICATION_JSON)
