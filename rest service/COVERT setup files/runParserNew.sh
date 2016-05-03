@@ -8,5 +8,4 @@ chmod 777 jsonJoin
 
 ./covert.sh bundle
 python Parser1.py
-./ParserJoin4Parser2.sh
-python Interactions.py
+python Parser2.py
