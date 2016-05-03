@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 
 import edu.usc.tool.ApkWriter;
 import edu.usc.tool.ShellExecutor;
+import edu.usc.tool.covert.Architecture;
 import edu.usc.tool.covert.StaticAnalysisService;
 import edu.usc.tool.covert.Vulnerabilities;
 
@@ -33,7 +34,7 @@ public class ToolService {
 	@Path("/runToolMock")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response runToolMock(final InputStream pInData) {
-		String myMockJson = "{\"interacting Components\": [[\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"], [\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"], [\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"], [\"org.cert.sendsms.Button1Listener\", \"org.cert.echoer.MainActivity\"]], \"Permissions\": [[\"SendSMS\", \"READ_PHONE_STATE\"], [\"SendSMS\", \"SEND_SMS\"]]}";
+		String myMockJson = "{\"combined_json\": [{\"intentActions\": [],\"theAppName\": \"Echoer\",\"receivers\": [\"org.cert.echoer.MainActivity\"],\"filterActions\": [\"android.intent.action.SEND\"],\"componentNames\": [\"org.cert.echoer.MainActivity\", \"org.cert.echoer.Button1Listener\"],\"senders\": [],\"permissions\": []}, {\"intentActions\": [\"android.intent.action.SEND\", \"android.intent.action.SEND\", \"android.intent.action.SEND\", \"android.intent.action.SEND\"],\"theAppName\": \"SendSMS\",\"receivers\": [\"org.cert.sendsms.MainActivity\"],\"filterActions\": [\"android.intent.action.MAIN\"],\"componentNames\": [\"org.cert.sendsms.MainActivity\", \"org.cert.sendsms.Button1Listener\"],\"senders\": [\"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\"],\"permissions\": [\"READ_PHONE_STATE\", \"SEND_SMS\", \"READ_PHONE_STATE\", \"SEND_SMS\"]}],\"finalOutput\": [{\"theCommonAction\": \"android.intent.action.SEND\",\"Component1\": \"org.cert.sendsms.Button1Listener\",\"Component2\": \"org.cert.echoer.MainActivity\"}]}";
 		return Response.status(200).entity(myMockJson).build();
 	}
 
@@ -41,6 +42,13 @@ public class ToolService {
 	@Path("/runTool")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response runTool(final InputStream pInData) {
+		return runArchitecture(pInData);
+	}
+
+	@POST
+	@Path("/runArchitecture")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response runArchitecture(final InputStream pInData) {
 		String myReceivedData;
 		try {
 			myReceivedData = IOUtils.toString(pInData);
@@ -81,22 +89,20 @@ public class ToolService {
 		ShellExecutor.executeDirectory(myCovertHome, "/bin/bash", myProperties.getProperty(ToolSettings.PARSER_PATH));
 
 		// retrieve the json "architecture" file
-		File myFile = new File(myProperties.getProperty(ToolSettings.JSON_OUTPUT_PATH));
+		File myJsonDir = new File(myProperties.getProperty(ToolSettings.JSON_OUTPUT_PATH));
+
+		String myCovertAnalysisKey = toKey(myApkObjectList);
+
+		// store the COVERT architecture
+		String myArchitectureJson = Architecture.toJson(myJsonDir);
+		Architecture.storeArchitecture(myCovertAnalysisKey, myArchitectureJson);
 
 		// store the COVERT analysis file
-		String myCovertAnalysisKey = toKey(myApkObjectList);
 		File myCovertAnalysisFile = new File(myApkDirectory, "bundle.xml");
 		StaticAnalysisService.storeStaticAnalysis(myCovertAnalysisKey, myCovertAnalysisFile);
 
 		// Return the json "architecture" file
-		String myVisualizerJson;
-		try {
-			myVisualizerJson = FileUtils.readFileToString(myFile);
-			return Response.status(200).entity(myVisualizerJson).build();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
+		return Response.status(200).entity(myArchitectureJson).build();
 	}
 
 	@POST
@@ -117,7 +123,7 @@ public class ToolService {
 
 		Vulnerabilities myVulnerabilities = StaticAnalysisService.parseKey(myKey);
 
-		String myJson = myGson.toJson(myVulnerabilities);
+		String myJson = Architecture.appendVulnerabilities(myKey, myVulnerabilities);
 		return Response.status(200).entity(myJson).build();
 	}
 
@@ -125,7 +131,7 @@ public class ToolService {
 	@Path("/runAnalysisMock")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response runAnalysisMock(final InputStream pInData) {
-		String myMockResponse = "{\"vulnerabilities\":[{\"attack_type\":\"Intent Spoofing\",\"component_name_1\":\"org.cert.sendsms.MainActivity\"},{\"attack_type\":\"Intent Spoofing\",\"component_name_1\":\"org.cert.echoer.MainActivity\"}]}";
+		String myMockResponse = "{\"combined_json\": [{\"intentActions\": [],\"theAppName\": \"Echoer\",\"receivers\": [\"org.cert.echoer.MainActivity\"],\"filterActions\": [\"android.intent.action.SEND\"],\"componentNames\": [\"org.cert.echoer.MainActivity\", \"org.cert.echoer.Button1Listener\"],\"senders\": [],\"permissions\": []}, {\"intentActions\": [\"android.intent.action.SEND\", \"android.intent.action.SEND\", \"android.intent.action.SEND\", \"android.intent.action.SEND\"],\"theAppName\": \"SendSMS\",\"receivers\": [\"org.cert.sendsms.MainActivity\"],\"filterActions\": [\"android.intent.action.MAIN\"],\"componentNames\": [\"org.cert.sendsms.MainActivity\", \"org.cert.sendsms.Button1Listener\"],\"senders\": [\"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\"],\"permissions\": [\"READ_PHONE_STATE\", \"SEND_SMS\", \"READ_PHONE_STATE\", \"SEND_SMS\"]}],\"finalOutput\": [{\"theCommonAction\": \"android.intent.action.SEND\",\"Component1\": \"org.cert.sendsms.Button1Listener\",\"Component2\": \"org.cert.echoer.MainActivity\"}],\"vulnerabilities\": [{\"attack_type\": \"Intent Spoofing\",\"component_name_1\": \"org.cert.sendsms.MainActivity\"}, {\"attack_type\": \"Intent Spoofing\",\"component_name_1\": \"org.cert.echoer.MainActivity\"}]}";
 		return Response.status(200).entity(myMockResponse).build();
 	}
 
