@@ -89,9 +89,13 @@ public final class StaticAnalysisService {
 
 				if (myAttackType != null && myComponentName != null) {
 					myVulEle.attack_type = myAttackType;
-					myVulEle.component_name_1 = myComponentName;
-					myVulEle.component_name_2 = getComponentName2(myVulnerability);
+					myVulEle.components = new ArrayList<VulnerableComponent>();
+					myVulEle.components.add(new VulnerableComponent(myComponentName));
 
+					String mySecondComponent = getComponentName2(myVulnerability);
+					if (mySecondComponent != null) {
+						myVulEle.components.add(new VulnerableComponent(mySecondComponent));
+					}
 					myVulnerabilityList.add(myVulEle);
 				}
 
