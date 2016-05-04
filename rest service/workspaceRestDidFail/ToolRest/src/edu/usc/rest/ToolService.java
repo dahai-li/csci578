@@ -34,6 +34,14 @@ import edu.usc.tool.covert.Vulnerability;
 public class ToolService {
 
 	@POST
+	@Path("/runAnalysisMock")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response runAnalysisMock(final InputStream pInData) {
+		String myMockJson = "{\"combined_json\": [{\"intentActions\": [\"android.intent.action.SEND\", \"android.intent.action.SEND\", \"android.intent.action.SEND\", \"android.intent.action.SEND\"], \"theAppName\": \"SendSMS\", \"receivers\": [\"org.cert.sendsms.MainActivity\"], \"filterActions\": [\"android.intent.action.MAIN\"], \"componentNames\": [\"org.cert.sendsms.MainActivity\", \"org.cert.sendsms.Button1Listener\"], \"senders\": [\"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\", \"org.cert.sendsms.Button1Listener\"], \"permissions\": [\"READ_PHONE_STATE\", \"SEND_SMS\", \"READ_PHONE_STATE\", \"SEND_SMS\"]},{\"intentActions\": [], \"theAppName\": \"Echoer\", \"receivers\": [\"org.cert.echoer.MainActivity\"], \"filterActions\": [\"android.intent.action.SEND\"], \"componentNames\": [\"org.cert.echoer.MainActivity\", \"org.cert.echoer.Button1Listener\"], \"senders\": [], \"permissions\": []}],\"finalOutput\":[{\"theCommonAction\": \"android.intent.action.SEND\", \"Component1\": \"org.cert.sendsms.Button1Listener\", \"Component2\": \"org.cert.echoer.MainActivity\"}],\"vulnerabilities\": [{\"attack_type\":\"Didfail attack\",\"components\":[{\"comp_name\":\"org.cert.WriteFile.Button1Listener\"},{\"comp_name\":\"org.cert.echoer.Button1Listener\"}]},{\"attack_type\":\"Didfail attack\",\"components\":[{\"comp_name\":\"org.cert.sendsms.Button1Listener\"},{\"comp_name\":\"org.cert.echoer.Button1Listener\"}]}]}";
+		return Response.status(200).entity(myMockJson).build();
+	}
+
+	@POST
 	@Path("/runAnalysis")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response runAnalysis(final InputStream pInData) {
