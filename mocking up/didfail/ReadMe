@@ -1,0 +1,7 @@
+Python setting
+apt-get install python-simplejson
+apt-get install python-lxml
+apt-get install python-bs4
+
+sudo chmod 777 -R /home/ubuntu/didfail/
+sudo chmod 777 -R /var/www/html
