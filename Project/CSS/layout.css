@@ -1,0 +1,75 @@
+#Container {
+	width: 5000px;
+	height:auto;
+}
+
+#Header {
+	height: 60px;
+	background-color: rgb(211,211,211);
+	text-align: center;
+	line-height: 55px;
+	vertical-align: middle;
+}
+
+
+#Mainbody {
+	width:100%;
+	height:2000px;
+	overflow-y:scroll;
+	background-color: rgb(255,245,238);
+}
+
+#Footer {
+	height:50px;
+	text-align: right;
+	line-height:55px;
+	background-color: rgb(211,211,211);
+}
+
+#InputArea {
+	height: auto;
+	width:100%;
+	background-color: rgb(211,211,211);
+}
+
+
+
+.uploadForm {
+	width: 35%;
+	padding:10px;
+	float:left;
+	background-color: #F9D735;
+
+}
+
+.buttons {
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+	width: 15%;
+	height: 30px;
+	padding:4px;
+	border: #3FA849 1px solid;
+	color: #FFFFFF;
+	float:left;
+	background-color: #3FA849;
+
+}
+
+.uploadForm label {
+	font-weight: bold;
+	color: #A0A0A0;
+}
+
+.inputFile {
+	padding:5px;
+	width:300px;
+	background-color:  #FFFFFF;
+}
+
+.btnUpload {
+	background-color: #3FA849;
+	padding:4px;
+	border: #3FA849 1px solid;
+	color: #FFFFFF;
+}

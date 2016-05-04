@@ -1,0 +1,187 @@
+<html>
+<head>
+  <title> Iterative code </title>
+  <link rel="stylesheet" href="CSS/layout.css">
+  <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+</head>
+<body>
+  <div id="Container"></div>
+  <div id="Header">
+    <h2>Android ICC Vulnerabilities</h2>
+  <div id="Mainbody">
+  <script src="arch.js"> </script>
+
+  <script>
+
+  var numberofApps = result.combined_json.length;
+  console.log(numberofApps);
+  var theta = 360/ numberofApps;
+    
+  var tooltip = d3.select(document.getElementById("Mainbody"))
+      .append("div")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden")
+      .text("a simple tooltip");
+
+  var svgContainer = d3.select(document.getElementById("Mainbody")).append("svg")
+                                        .attr("width", 5000)
+                                        .attr("height", 5000);
+
+    var allTheRectangles = svgContainer.selectAll("rect")
+                    .data(result.combined_json)
+                    .enter()
+                    .append("rect")
+                    .attr("x", function(d, i){
+            //return ((i%3)*600)+300;
+            var x = 2500 + (2000 * Math.cos(theta * i));
+            console.log(x);
+                        return x;
+                    })
+                    .attr("y", function(d, i){
+                      //return (Math.floor(i/3) + 1)*300;
+                        var y = 2500 + (2000 * Math.sin(theta * i));
+                        console.log(y);
+                        return y;
+                    })
+                    .attr("width", 240)
+                    .attr("height", 200)
+                    .attr("id", function(d) {return d.theAppName;})
+                    .style("stroke", "black")
+                    .style("stroke-width", 3)
+                  .style("fill", "#44619D")
+                  .style("fill-opacity", "1")
+                  .on("mouseover", function(d){
+                      return tooltip.style("visibility", "visible").text(d3.select(this).attr("id"));})
+                  .on("mousemove", function(d){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+                  .on("mouseout", function(){
+                        return tooltip.style("visibility", "hidden");});
+
+
+    for(var i=0;i<result.combined_json.length;i++)
+    {
+        var temp = d3.select(document.getElementById(result.combined_json[i].theAppName));
+        //console.log(temp);
+        if(temp)
+        {
+            x = temp.attr("x");
+            y = temp.attr("y");
+
+            svgContainer.selectAll("i") 
+                .data(result.combined_json[i].componentNames)
+                .enter()
+                .append("circle")
+                .attr("cx" ,function(d, i){ 
+                                                  if(i < 5) {return eval(x) + eval((i + 1) * 30);}
+                                                  else if(5 <= i && i < 10){return eval(x) + eval((i - 4) * 30);}
+                                                  else if(10 <= i && i < 15){return eval(x) + eval((i - 9) * 30);}
+                                                  else if(15 <= i && i < 20){return eval(x) + eval((i - 14) * 30);}
+
+                                                  })
+                    .attr("cy", function(d, i){ if(i < 5) {return (eval(y) + 30);}
+                                              else if(5 <= i && i < 10) {return eval(y) + 60;}
+                                              else if(10 <= i && i < 15) {return eval(y) + 90;}
+                                              else if(15 <= i && i < 20) {return eval(y) + 120;}})
+                    .attr("r", 5)
+                    .attr("id", function(d,i) {return d;})
+                    .attr("label", function(d) {return d;})
+                    .style("fill", "white")
+                    .style("stroke","black")
+                    .on("mouseover", function(d){
+                      d3.select(this).attr("r", 10);  
+                      return tooltip.style("visibility", "visible").text(d3.select(this).attr("id"));})
+                    .on("mousemove", function(d){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+                    .on("mouseout", function(){
+                      d3.select(this).attr("r", 5);  
+                      return tooltip.style("visibility", "hidden");});
+        }
+    }
+
+    for(var i=0;i<result.combined_json.length;i++)
+    {
+        var temp = d3.select(document.getElementById(result.combined_json[i].theAppName));
+        x = temp.attr("x");
+        y = temp.attr("y");
+        svgContainer.selectAll(".allThePerms")
+                            .data(result.combined_json[i].permissions)
+                            .enter()
+                            .append("circle")
+                            .attr("cx" ,function(d, i){if(i < 4) {return eval(x) - 165;}
+                                                      else if(4 <= i && i < 8){return eval(x) - 110;}
+                                                      else if(8 <= i && i < 12){return eval(x) - 55;}
+                                                        })
+
+                            .attr("cy", function(d, i){ if(i < 4) {return (eval(y) + eval((i * 40) + (i + 1) * 12));}
+                                                      else if(4 <= i && i < 8) {return (eval(y) + eval(((i - 4) * 40) + ((i - 4) + 1) * 12));}
+                                                      else if(8 <= i && i < 12) {return (eval(y) + eval(((i - 8) * 40) + ((i - 8) + 1) * 12));}})
+                            .attr('r',20)
+                            .attr("id", function(d, i) {return d;})
+                            .attr("label", "allThePermLines")
+                            .style("fill", "white")
+                            .style("stroke","blue") 
+                            .style("stroke-width", 2)
+                            .on("mouseover", function(d){
+                      d3.select(this).attr("r", 60);  
+                      return tooltip.style("visibility", "visible").text(d3.select(this).attr("id"));})
+                    .on("mousemove", function(d){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+                    .on("mouseout", function(){
+                      d3.select(this).attr("r", 20);  
+                      return tooltip.style("visibility", "hidden");});
+
+
+
+        svgContainer.selectAll(".allThePermLines")
+                            .data(result.combined_json[i].permissions)
+                            .enter()
+                            .append("line")
+                            .style("stroke","black")
+                            .style("stroke-dasharray", ("5, 5"))
+                            .attr("x1", eval(x))
+                            .attr("y1", eval(y) + 100)
+                            .attr("x2" ,function(d, i){if(i < 4) {return eval(x) - 145;}
+                                                      else if(4 <= i && i < 8){return eval(x) - 90;}
+                                                      else if(8 <= i && i < 12){return eval(x) - 35;}
+                                                        })
+                            .attr("y2", function(d, i){ if(i < 4) {return (eval(y) + eval((i * 40) + (i + 1) * 12) + 10);}
+                                                      else if(4 <= i && i < 8) {return (eval(y) + eval(((i - 4) * 40) + ((i - 4) + 1) * 12) + 10);}
+                                                      else if(8 <= i && i < 12) {return (eval(y) + eval(((i - 8) * 40) + ((i - 8) + 1) * 12) + 10);}});
+    }
+
+    svgContainer.selectAll(".allTheCommunications")
+                          .data(result.finalOutput) 
+                          .enter()
+                          .append("line")
+                          .style("stroke","grey")
+                          .attr("x1", function(d, i){
+                                //console.log(d.theCommonAction);
+                                return d3.select(document.getElementById(d.Component1)).attr("cx");
+                                                        })
+                          .attr("y1", function(d, i){
+                                return d3.select(document.getElementById(d.Component1)).attr("cy");
+                                                        })
+                          .attr("x2", function(d, i){
+                                //console.log(d3.select(document.getElementById(d.Component2)).attr("cx"));
+                                return d3.select(document.getElementById(d.Component2)).attr("cx");
+                                                        })
+                          .attr("y2", function(d, i){
+                                //console.log(d3.select(document.getElementById(d.Component2)).attr("cy"));
+                                return d3.select(document.getElementById(d.Component2)).attr("cy");
+                                                        });  
+
+    
+
+
+
+
+
+  </script>
+  </div>
+  <div id="Footer">
+    <h3>Presented by- Dahai Li, Jooyuon Lee, Nikitha Ravinder<h3>
+
+  </div>
+</body>
+</html>

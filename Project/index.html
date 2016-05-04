@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head> 
+	<title> Android ICC Attacks Visualization </title>
+	<meta charset="utf-8">
+	
+	<link rel="stylesheet" href="CSS/layout.css">
+</head>
+<body>
+	<div id="Container"></div>
+	<div id="Header">
+		<h2>Android ICC Vulnerabilities</h2>
+	</div>
+	
+	<div id="Mainbody">
+	</br>
+				<form name="ApkUpload" enctype="multipart/form-data" action="upload.php" method="post" class="uploadForm">
+					<input type="hidden" name="MAX_FILE_SIZE" value="4294967296">
+					<label>Upload APK File:</label></br>
+					<input type="file" name="filename" class="inputFile">
+					<input type="submit" name="upload" value="Upload" class="btnUpload">
+				</form>
+			
+			
+				<form action="rest_arch.php">
+					<input class="buttons" type="submit" name="architecture" value="Analyze Architecture" >
+				</form>
+			
+			
+				<form action="rest_covert.php">
+					<input class="buttons" type="submit" name="covert" value="Covert Analysis" >
+				</form>
+			
+			
+				<form action="rest_didfail.php">
+					<input class="buttons" type="submit" name="didfail" value="Didfail Analysis" >
+				</form>
+	</div>
+	<div id="Footer">
+		<h3>Presented by- Dahai Li, Jooyuon Lee, Nikitha Ravinder<h3>
+	</div>
+</body>
+</html>
