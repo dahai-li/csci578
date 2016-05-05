@@ -138,11 +138,11 @@ public final class StaticAnalysisService {
 	}
 
 	private static String getComponentName1(final OMElement pVulnerability) {
-		return executeXPathForElementText(pVulnerability, "./vulnerabilityElements/element[1]/description");
+		return executeXPathForElementText(pVulnerability, "./vulnerabilityElements[1]/element[1]/description");
 	}
 
 	private static String getComponentName2(final OMElement pVulnerability) {
-		return executeXPathForElementText(pVulnerability, "./vulnerabilityElements/element[2]/description");
+		return executeXPathForElementText(pVulnerability, "./vulnerabilityElements[2]/element[1]/description");
 	}
 
 	private static String executeXPathForElementText(final OMNode pNode, final String pXPath) {
@@ -154,10 +154,8 @@ public final class StaticAnalysisService {
 			int mySize = myNodes.size();
 			if (mySize == 0) {
 				return null;
-			} else if (mySize == 1) {
-				return myNodes.get(0).getText();
 			} else {
-				throw new IllegalStateException(pNode.toString() + ":: Path: " + pXPath);
+				return myNodes.get(0).getText();
 			}
 		} catch (JaxenException e) {
 			throw new IllegalStateException(pNode.toString() + ":: Path: " + pXPath);
